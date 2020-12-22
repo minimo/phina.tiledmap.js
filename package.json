@@ -1,0 +1,19 @@
+{
+  "name": "phina.tiledmap.js",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/minimo/phina.tiledmap.js.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/minimo/phina.tiledmap.js/issues"
+  },
+  "homepage": "https://github.com/minimo/phina.tiledmap.js#readme"
+}
