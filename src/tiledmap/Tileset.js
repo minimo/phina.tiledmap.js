@@ -1,5 +1,6 @@
 import {XMLLoader} from "./XMLLoader"
 import {AssetLoader, AssetManager} from "phina.js";
+import {$extend, $safe} from "phina.js/types/core/object";
 
 export class TileSet extends XMLLoader{
     constructor(xml) {
@@ -23,17 +24,17 @@ export class TileSet extends XMLLoader{
       return new Promise(resolve => {
         //タイルセット取得
         const tileset = data.getElementsByTagName('tileset')[0];
-        const props = this._propertiesToJSON(tileset);
+        // const props = this._propertiesToJSON(tileset);
 
         //タイルセット属性情報取得
         const attr = this._attrToJSON(tileset);
-        attr.$safe({
+        $safe.call(attr,{
           tilewidth: 32,
           tileheight: 32,
           spacing: 0,
           margin: 0,
         });
-        this.$extend(attr);
+        $extend.call(this, attr);
         this.chips = [];
 
         //ソース画像設定取得
@@ -49,12 +50,11 @@ export class TileSet extends XMLLoader{
   
         //マップチップリスト作成
         for (let r = 0; r < this.tilecount; r++) {
-          const chip = {
-            image: this.imageName,
-            x: (r  % this.columns) * (this.tilewidth + this.spacing) + this.margin,
-            y: Math.floor(r / this.columns) * (this.tileheight + this.spacing) + this.margin,
+          this.chips[r] = {
+              image: this.imageName,
+              x: (r  % this.columns) * (this.tilewidth + this.spacing) + this.margin,
+              y: Math.floor(r / this.columns) * (this.tileheight + this.spacing) + this.margin,
           };
-          this.chips[r] = chip;
         }
 
         //イメージデータ読み込み
@@ -89,7 +89,7 @@ export class TileSet extends XMLLoader{
         if (loadImage) {
           const loader = new AssetLoader();
           loader.load(assets);
-          loader.on('load', e => {
+          loader.on('load', () => {
             //透過色設定反映
             this.image = AssetManager.get('image', imageSource.imageUrl);
             if (imageSource.transR !== undefined) {

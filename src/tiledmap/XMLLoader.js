@@ -3,6 +3,7 @@ import {Asset} from "phina.js";
 export class XMLLoader extends Asset{
     constructor() {
         super();
+        this.path = "";
     }
 
     loadDummy() { }
@@ -53,11 +54,7 @@ export class XMLLoader extends Asset{
                 } else if (type === "float") {
                     obj[p.getAttribute('name')] = parseFloat(value);
                 } else if (type === "bool" ) {
-                    if (value === "true") {
-                        obj[p.getAttribute('name')] = true;
-                    } else {
-                        obj[p.getAttribute('name')] = false;
-                    }
+                    obj[p.getAttribute('name')] = value === "true";
                 } else {
                     obj[p.getAttribute('name')] = value;
                 }
@@ -86,7 +83,10 @@ export class XMLLoader extends Asset{
         return obj;
     }
 
-    //CSVパース
+    /**
+     * CSVパース
+     * @protected
+     */
     _parseCSV(data) {
         const layer = [];
         const dataList = data.split(',');
@@ -100,13 +100,13 @@ export class XMLLoader extends Asset{
     /**
      * BASE64パース
      * http://thekannon-server.appspot.com/herpity-derpity.appspot.com/pastebin.com/75Kks0WH
-     * @private
+     * @protected
      */
     _parseBase64(data) {
         const rst = [];
         const dataList = atob(data.trim()).split('').map(e => e.charCodeAt(0));
         for (let i = 0, len = dataList.length / 4; i < len; ++i) {
-            const n = dataList[i * 4];
+            const n = dataList[i * 4].toString();
             rst[i] = parseInt(n, 10);
         }
         return rst;

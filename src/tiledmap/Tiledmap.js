@@ -1,5 +1,6 @@
 import {XMLLoader} from "./XMLLoader"
-import {AssetLoader, AssetManager, Texture} from "phina.js";
+import {AssetLoader, AssetManager, Canvas, Texture} from "phina.js";
+import {$extend, $safe} from "phina.js/types/core/object";
 
 export class TiledMap extends XMLLoader{
     constructor() {
@@ -23,7 +24,7 @@ export class TiledMap extends XMLLoader{
     getMapData(layerName) {
       //レイヤー検索
       for(let i = 0; i < this.layers.length; i++) {
-        if (this.layers[i].name == layerName) {
+        if (this.layers[i].name === layerName) {
           //コピーを返す
           return this.layers[i].data.concat();
         }
@@ -51,13 +52,14 @@ export class TiledMap extends XMLLoader{
 
     //オブジェクトレイヤーをクローンして返す
     _cloneObjectLayer(srcLayer) {
-      const result = {}.$safe(srcLayer);
+      const result = $safe.call({}, srcLayer);
       result.objects = [];
       //レイヤー内オブジェクトのコピー
       srcLayer.objects.forEach(obj => {
         const resObj = {
-          properties: {}.$safe(obj.properties),
-        }.$extend(obj);
+          properties: $safe.call({}, obj.properties),
+        }
+        $extend.call(resObj, obj);
         if (obj.ellipse) resObj.ellipse = obj.ellipse;
         if (obj.gid) resObj.gid = obj.gid;
         if (obj.polygon) resObj.polygon = obj.polygon.clone();
@@ -72,7 +74,7 @@ export class TiledMap extends XMLLoader{
         //タイル属性情報取得
         const map = data.getElementsByTagName('map')[0];
         const attr = this._attrToJSON(map);
-        this.$extend(attr);
+        $extend.call(this, attr);
         this.properties = this._propertiesToJSON(map);
 
         //タイルセット取得
@@ -127,7 +129,7 @@ export class TiledMap extends XMLLoader{
         }
       });
 
-      layers.each(layer => {
+      layers.forEach(layer => {
         switch (layer.tagName) {
           case "layer":
             {
@@ -146,7 +148,7 @@ export class TiledMap extends XMLLoader{
               }
 
               const attr = this._attrToJSON(layer);
-              l.$extend(attr);
+              $extend.call(l, attr);
               l.properties = this._propertiesToJSON(layer);
 
               data.push(l);
@@ -310,7 +312,7 @@ export class TiledMap extends XMLLoader{
 
       const width = this.width * this.tilewidth;
       const height = this.height * this.tileheight;
-      const canvas = phina.graphics.Canvas().setSize(width, height);
+      const canvas = new Canvas().setSize(width, height);
 
       for (let i = 0; i < this.layers.length; i++) {
         //マップレイヤー
@@ -349,7 +351,7 @@ export class TiledMap extends XMLLoader{
         //イメージレイヤー
         if (this.layers[i].type === "imagelayer" && this.layers[i].visible !== "0") {
           if (layerName === undefined || layerName === this.layers[i].name) {
-            const image = phina.asset.AssetManager.get('image', this.layers[i].image.source);
+            const image = AssetManager.get('image', this.layers[i].image.source);
             canvas.context.drawImage(image.domElement, this.layers[i].x, this.layers[i].y);
           }
         }
@@ -361,7 +363,7 @@ export class TiledMap extends XMLLoader{
     }
 
     //キャンバスの指定した座標にマップチップのイメージをコピーする
-    _setMapChip(canvas, index, x, y, opacity) {
+    _setMapChip(canvas, index, x, y) {
       //対象タイルセットの判別
       let tileset;
       for (let i = 0; i < this.tilesets.length; i++) {
