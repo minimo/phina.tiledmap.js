@@ -1,66 +1,26 @@
-/*
- *  phina.tiledmap.js
- *  2016/9/10
- *  @auther minimo  
- *  This Program is MIT license.
- * 
- *  2019/9/18
- *  version 2.0
- */
+import {XMLLoader} from "./XMLLoader"
+import {AssetLoader, AssetManager, Texture} from "phina.js";
 
-phina.namespace(function() {
-
-  phina.define("phina.asset.TiledMap", {
-    superClass: "phina.asset.XMLLoader",
-
-    image: null,
-
-    tilesets: null,
-    layers: null,
-
-    init: function() {
-        this.superInit();
-    },
-
-    _load: function(resolve) {
-      //パス抜き出し
+export class TiledMap extends XMLLoader{
+    constructor() {
+      super();
+      this.image = null;
+      this.tilesets = null;
+      this.layers = null;
       this.path = "";
-      const last = this.src.lastIndexOf("/");
-      if (last > 0) {
-        this.path = this.src.substring(0, last + 1);
-      }
-
-      //終了関数保存
-      this._resolve = resolve;
-
-      // load
-      const xml = new XMLHttpRequest();
-      xml.open('GET', this.src);
-      xml.onreadystatechange = () => {
-        if (xml.readyState === 4) {
-          if ([200, 201, 0].indexOf(xml.status) !== -1) {
-            const data = (new DOMParser()).parseFromString(xml.responseText, "text/xml");
-            this.dataType = "xml";
-            this.data = data;
-            this._parse(data)
-              .then(() => this._resolve(this));
-          }
-        }
-      };
-      xml.send(null);
-    },
+    }
 
     //マップイメージ取得
-    getImage: function(layerName) {
+    getImage(layerName) {
       if (layerName === undefined) {
         return this.image;
       } else {
         return this._generateImage(layerName);
       }
-    },
+    }
 
     //指定マップレイヤーを配列として取得
-    getMapData: function(layerName) {
+    getMapData(layerName) {
       //レイヤー検索
       for(let i = 0; i < this.layers.length; i++) {
         if (this.layers[i].name == layerName) {
@@ -69,16 +29,16 @@ phina.namespace(function() {
         }
       }
       return null;
-    },
+    }
 
     //オブジェクトグループを取得（指定が無い場合、全レイヤーを配列にして返す）
-    getObjectGroup: function(groupName) {
+    getObjectGroup(groupName) {
       groupName = groupName || null;
       const ls = [];
       const len = this.layers.length;
       for (let i = 0; i < len; i++) {
-        if (this.layers[i].type == "objectgroup") {
-          if (groupName == null || groupName == this.layers[i].name) {
+        if (this.layers[i].type === "objectgroup") {
+          if (groupName == null || groupName === this.layers[i].name) {
             //レイヤー情報をクローンする
             const obj = this._cloneObjectLayer(this.layers[i]);
             if (groupName !== null) return obj;
@@ -87,10 +47,10 @@ phina.namespace(function() {
         }
       }
       return ls;
-    },
+    }
 
     //オブジェクトレイヤーをクローンして返す
-    _cloneObjectLayer: function(srcLayer) {
+    _cloneObjectLayer(srcLayer) {
       const result = {}.$safe(srcLayer);
       result.objects = [];
       //レイヤー内オブジェクトのコピー
@@ -105,9 +65,9 @@ phina.namespace(function() {
         result.objects.push(resObj);
       });
       return result;
-    },
+    }
 
-    _parse: function(data) {
+    _parse(data) {
       return new Promise(resolve => {
         //タイル属性情報取得
         const map = data.getElementsByTagName('map')[0];
@@ -130,10 +90,10 @@ phina.namespace(function() {
             resolve();
           });
       })
-    },
+    }
 
     //タイルセットのパース
-    _parseTilesets: function(xml) {
+    _parseTilesets(xml) {
       const each = Array.prototype.forEach;
       const data = [];
       const tilesets = xml.getElementsByTagName('tileset');
@@ -152,17 +112,17 @@ phina.namespace(function() {
         data.push(t);
       });
       return data;
-    },
+    }
 
     //レイヤー情報のパース
-    _parseLayers: function(xml) {
+    _parseLayers(xml) {
       const each = Array.prototype.forEach;
       const data = [];
 
       const map = xml.getElementsByTagName("map")[0];
       const layers = [];
       each.call(map.childNodes, elm => {
-        if (elm.tagName == "layer" || elm.tagName == "objectgroup" || elm.tagName == "imagelayer") {
+        if (elm.tagName === "layer" || elm.tagName === "objectgroup" || elm.tagName === "imagelayer") {
           layers.push(elm);
         }
       });
@@ -179,9 +139,9 @@ phina.namespace(function() {
                   name: layer.getAttribute("name"),
               };
 
-              if (encoding == "csv") {
+              if (encoding === "csv") {
                   l.data = this._parseCSV(d.textContent);
-              } else if (encoding == "base64") {
+              } else if (encoding === "base64") {
                   l.data = this._parseBase64(d.textContent);
               }
 
@@ -207,19 +167,19 @@ phina.namespace(function() {
                 draworder: layer.getAttribute("draworder") || null,
               };
               each.call(layer.childNodes, elm => {
-                if (elm.nodeType == 3) return;
+                if (elm.nodeType === 3) return;
                 const d = this._attrToJSON(elm);
                 d.properties = this._propertiesToJSON(elm);
                 //子要素の解析
                 if (elm.childNodes.length) {
                   elm.childNodes.forEach(e => {
-                    if (e.nodeType == 3) return;
+                    if (e.nodeType === 3) return;
                     //楕円
-                    if (e.nodeName == 'ellipse') {
+                    if (e.nodeName === 'ellipse') {
                       d.ellipse = true;
                     }
                     //多角形
-                    if (e.nodeName == 'polygon') {
+                    if (e.nodeName === 'polygon') {
                       d.polygon = [];
                       const attr = this._attrToJSON_str(e);
                       const pl = attr.points.split(" ");
@@ -229,7 +189,7 @@ phina.namespace(function() {
                       });
                     }
                     //線分
-                    if (e.nodeName == 'polyline') {
+                    if (e.nodeName === 'polyline') {
                       d.polyline = [];
                       const attr = this._attrToJSON_str(e);
                       const pl = attr.points.split(" ");
@@ -257,7 +217,7 @@ phina.namespace(function() {
                 x: parseFloat(layer.getAttribute("offsetx")) || 0,
                 y: parseFloat(layer.getAttribute("offsety")) || 0,
                 alpha: layer.getAttribute("opacity") || 1,
-                visible: (layer.getAttribute("visible") === undefined || layer.getAttribute("visible") != 0),
+                visible: (layer.getAttribute("visible") === undefined || layer.getAttribute("visible") !== 0),
               };
               const imageElm = layer.getElementsByTagName("image")[0];
               l.image = {source: imageElm.getAttribute("source")};
@@ -271,10 +231,10 @@ phina.namespace(function() {
         }
       });
       return data;
-    },
+    }
 
     //アセットに無いイメージデータを読み込み
-    _checkImage: function() {
+    _checkImage() {
       const imageSource = [];
       const loadImage = [];
 
@@ -299,13 +259,13 @@ phina.namespace(function() {
       //アセットにあるか確認
       imageSource.forEach(e => {
         if (e.isTileset) {
-          const tsx = phina.asset.AssetManager.get('tsx', e.image);
+          const tsx = AssetManager.get('tsx', e.image);
           if (!tsx) {
             //アセットになかったのでロードリストに追加
             loadImage.push(e);
           }
         } else {
-          const image = phina.asset.AssetManager.get('image', e.image);
+          const image = AssetManager.get('image', e.image);
           if (!image) {
             //アセットになかったのでロードリストに追加
             loadImage.push(e);
@@ -326,11 +286,11 @@ phina.namespace(function() {
           }
         });
         return new Promise(resolve => {
-          const loader = phina.asset.AssetLoader();
+          const loader = new AssetLoader();
           loader.load(assets);
           loader.on('load', () => {
             this.tilesets.forEach(e => {
-              e.tsx = phina.asset.AssetManager.get('tsx', e.source);
+              e.tsx = AssetManager.get('tsx', e.source);
             });
             resolve();
           });
@@ -338,15 +298,15 @@ phina.namespace(function() {
       } else {
         return Promise.resolve();
       }
-    },
+    }
 
     //マップイメージ作成
-    _generateImage: function(layerName) {
+    _generateImage(layerName) {
       let numLayer = 0;
       for (let i = 0; i < this.layers.length; i++) {
-        if (this.layers[i].type == "layer" || this.layers[i].type == "imagelayer") numLayer++;
+        if (this.layers[i].type === "layer" || this.layers[i].type === "imagelayer") numLayer++;
       }
-      if (numLayer == 0) return null;
+      if (numLayer === 0) return null;
 
       const width = this.width * this.tilewidth;
       const height = this.height * this.tileheight;
@@ -354,7 +314,7 @@ phina.namespace(function() {
 
       for (let i = 0; i < this.layers.length; i++) {
         //マップレイヤー
-        if (this.layers[i].type == "layer" && this.layers[i].visible != "0") {
+        if (this.layers[i].type === "layer" && this.layers[i].visible !== "0") {
           if (layerName === undefined || layerName === this.layers[i].name) {
             const layer = this.layers[i];
             const mapdata = layer.data;
@@ -375,7 +335,7 @@ phina.namespace(function() {
           }
         }
         //オブジェクトグループ
-        if (this.layers[i].type == "objectgroup" && this.layers[i].visible != "0") {
+        if (this.layers[i].type === "objectgroup" && this.layers[i].visible !== "0") {
           if (layerName === undefined || layerName === this.layers[i].name) {
             const layer = this.layers[i];
             const opacity = layer.opacity || 1.0;
@@ -387,7 +347,7 @@ phina.namespace(function() {
           }
         }
         //イメージレイヤー
-        if (this.layers[i].type == "imagelayer" && this.layers[i].visible != "0") {
+        if (this.layers[i].type === "imagelayer" && this.layers[i].visible !== "0") {
           if (layerName === undefined || layerName === this.layers[i].name) {
             const image = phina.asset.AssetManager.get('image', this.layers[i].image.source);
             canvas.context.drawImage(image.domElement, this.layers[i].x, this.layers[i].y);
@@ -395,13 +355,13 @@ phina.namespace(function() {
         }
       }
 
-      const texture = phina.asset.Texture();
+      const texture = new Texture();
       texture.domElement = canvas.domElement;
       return texture;
-    },
+    }
 
     //キャンバスの指定した座標にマップチップのイメージをコピーする
-    _setMapChip: function(canvas, index, x, y, opacity) {
+    _setMapChip(canvas, index, x, y, opacity) {
       //対象タイルセットの判別
       let tileset;
       for (let i = 0; i < this.tilesets.length; i++) {
@@ -418,21 +378,18 @@ phina.namespace(function() {
       //タイルセットからマップチップを取得
       const tsx = tileset.tsx;
       const chip = tsx.chips[index - tileset.firstgid];
-      const image = phina.asset.AssetManager.get('image', chip.image);
+      const image = AssetManager.get('image', chip.image);
       canvas.context.drawImage(
         image.domElement,
         chip.x + tsx.margin, chip.y + tsx.margin,
         tsx.tilewidth, tsx.tileheight,
         x, y,
         tsx.tilewidth, tsx.tileheight);
-    },
+    }
+}
 
-  });
-
-  //ローダーに追加
-  phina.asset.AssetLoader.assetLoadFunctions.tmx = function(key, path) {
-    const tmx = phina.asset.TiledMap();
+//ローダーに追加
+AssetLoader.assetLoadFunctions.tmx = (key, path) => {
+    const tmx = new TiledMap();
     return tmx.load(path);
-  };
-
-});
+}
