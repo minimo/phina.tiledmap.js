@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/minimo/phina.tiledmap.js#readme",
   "dependencies": {
-    "phina.js": "https://github.com/minimo/phina.js/releases/download/esm-alpha.minimo.2/phina.esm-alpha.minimo.2.tgz",
+    "phina.js": "https://github.com/minimo/phina.js/releases/download/esm-alpha.minimo.3/phina.esm-alpha.minimo.3.tgz",
     "webpack": "^5.19.0"
   }
 }
