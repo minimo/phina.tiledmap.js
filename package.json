@@ -23,6 +23,7 @@
     "phina.js": "https://github.com/minimo/phina.js/releases/download/esm-alpha.minimo.3/phina.esm-alpha.minimo.3.tgz"
   },
   "devDependencies": {
+    "eslint-loader": "^4.0.2",
     "webpack": "^5.38.1",
     "webpack-cli": "^4.7.0"
   }

@@ -1,6 +1,5 @@
 import {XMLLoader} from "./XMLLoader"
-import {AssetLoader, AssetManager, Canvas, Texture} from "phina.js";
-import {$extend, $safe} from "phina.js/types/core/object";
+import {AssetLoader, AssetManager, Canvas, Texture, $safe, $extend} from "phina.js";
 
 export class TiledMap extends XMLLoader{
     constructor() {

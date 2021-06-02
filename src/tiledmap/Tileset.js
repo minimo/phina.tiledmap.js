@@ -1,6 +1,5 @@
 import {XMLLoader} from "./XMLLoader"
-import {AssetLoader, AssetManager} from "phina.js";
-import {$extend, $safe} from "phina.js/types/core/object";
+import {AssetLoader, AssetManager, $extend, $safe} from "phina.js";
 
 export class TileSet extends XMLLoader{
     constructor(xml) {
