@@ -4,6 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "serve:dev": "webpack-cli serve --config webpack.dev.js",
+    "build:dev": "webpack --config webpack.dev.js",
+    "build:prd": "webpack --config webpack.prod.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -11,13 +14,16 @@
     "url": "git+https://github.com/minimo/phina.tiledmap.js.git"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/minimo/phina.tiledmap.js/issues"
   },
   "homepage": "https://github.com/minimo/phina.tiledmap.js#readme",
   "dependencies": {
-    "phina.js": "https://github.com/minimo/phina.js/releases/download/esm-alpha.minimo.3/phina.esm-alpha.minimo.3.tgz",
-    "webpack": "^5.19.0"
+    "phina.js": "https://github.com/minimo/phina.js/releases/download/esm-alpha.minimo.3/phina.esm-alpha.minimo.3.tgz"
+  },
+  "devDependencies": {
+    "webpack": "^5.38.1",
+    "webpack-cli": "^4.7.0"
   }
 }
