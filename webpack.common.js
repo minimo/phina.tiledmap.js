@@ -26,9 +26,6 @@ module.exports = {
   resolve: {
     alias: {
       '@src': path.resolve(__dirname, 'src'),
-      '@scenes': path.resolve(__dirname, 'src/scenes'),
-      '@elements': path.resolve(__dirname, 'src/elements'),
-      '@extensions': path.resolve(__dirname, 'src/extensions'),
       '@phina' : path.resolve(__dirname, "node_modules/phina.js/build/phina.esm"),
     },
   },

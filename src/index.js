@@ -1,2 +1,3 @@
-import {TiledMap} from "./tiledmap/Tiledmap";
-import {TileSet} from "./tiledmap/Tileset";
+export * as XMLLoader from "./tiledmap/XMLLoader";
+export * as TileSet from "./tiledmap/Tileset"
+export * as TiledMap from "./tiledmap/Tiledmap";

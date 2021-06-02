@@ -6,7 +6,7 @@ module.exports = merge(common, {
   devtool: 'inline-source-map',
   output: {
     path: `${__dirname}/publish`,
-    filename: 'main.js',
+    filename: 'phina.tiledmap.esm.js',
   },
   devServer: {
     contentBase: "publish",
