@@ -16,10 +16,21 @@ export class TileSet extends XMLLoader{
         }
     }
 
+    /**
+     * XMLファイル読み込み
+     * @param xml {XMLDocument}
+     * @returns {Promise<unknown>}
+     */
     loadFromXML(xml) {
       return this._parse(xml);
     }
 
+    /**
+     *
+     * @param data {XMLDocument}
+     * @returns {Promise<unknown>}
+     * @private
+     */
     _parse(data) {
       return new Promise(resolve => {
         //タイルセット取得
@@ -63,7 +74,11 @@ export class TileSet extends XMLLoader{
       });
     }
 
-    //アセットに無いイメージデータを読み込み
+    /**
+     * アセットに無いイメージデータを読み込み
+     * @returns {Promise<unknown>}
+     * @private
+     */
     _loadImage() {
       return new Promise(resolve => {
         const imageSource = {
@@ -112,7 +127,12 @@ export class TileSet extends XMLLoader{
     }
 }
 
-//ローダーに追加
+/**
+ * tsxファイル読み込み
+ * @param key
+ * @param path
+ * @returns {Flow}
+ */
 AssetLoader.assetLoadFunctions.tsx = function(key, path) {
     const tsx = new TileSet();
     return tsx.load(path);

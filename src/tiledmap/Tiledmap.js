@@ -11,7 +11,11 @@ export class TiledMap extends XMLLoader{
       this.path = "";
     }
 
-    //マップイメージ取得
+    /**
+     * マップイメージ取得
+     * @param layerName {String}
+     * @returns {Texture|null}
+     */
     getImage(layerName) {
       if (layerName === undefined) {
         return this.image;
@@ -20,7 +24,11 @@ export class TiledMap extends XMLLoader{
       }
     }
 
-    //指定マップレイヤーを配列として取得
+    /**
+     * 指定マップレイヤーを配列として取得
+     * @param layerName {String}
+     * @returns {null|*}
+     */
     getMapData(layerName) {
       //レイヤー検索
       for(let i = 0; i < this.layers.length; i++) {
@@ -32,7 +40,11 @@ export class TiledMap extends XMLLoader{
       return null;
     }
 
-    //オブジェクトグループを取得（指定が無い場合、全レイヤーを配列にして返す）
+    /**
+     * オブジェクトグループを取得（指定が無い場合、全レイヤーを配列にして返す）
+     * @param groupName {String}
+     * @returns {*[]|any}
+     */
     getObjectGroup(groupName) {
       groupName = groupName || null;
       const ls = [];
@@ -50,7 +62,12 @@ export class TiledMap extends XMLLoader{
       return ls;
     }
 
-    //オブジェクトレイヤーをクローンして返す
+    /**
+     * オブジェクトレイヤーをクローンして返す
+     * @param srcLayer {String}
+     * @returns {any}
+     * @private
+     */
     _cloneObjectLayer(srcLayer) {
       const result = $safe.call({}, srcLayer);
       result.objects = [];
@@ -69,6 +86,12 @@ export class TiledMap extends XMLLoader{
       return result;
     }
 
+    /**
+     * データのパースを行う
+     * @param data {XMLDocument}
+     * @returns {Promise<unknown>}
+     * @private
+     */
     _parse(data) {
       return new Promise(resolve => {
         //タイル属性情報取得
@@ -94,7 +117,12 @@ export class TiledMap extends XMLLoader{
       })
     }
 
-    //タイルセットのパース
+    /**
+     * タイルセットのパース
+     * @param xml {XMLDocument}
+     * @returns {*[]}
+     * @private
+     */
     _parseTilesets(xml) {
       const each = Array.prototype.forEach;
       const data = [];
@@ -116,7 +144,12 @@ export class TiledMap extends XMLLoader{
       return data;
     }
 
-    //レイヤー情報のパース
+    /**
+     * レイヤー情報のパース
+     * @param xml {XMLDocument}
+     * @returns {*[]}
+     * @private
+     */
     _parseLayers(xml) {
       const each = Array.prototype.forEach;
       const data = [];
@@ -235,7 +268,11 @@ export class TiledMap extends XMLLoader{
       return data;
     }
 
-    //アセットに無いイメージデータを読み込み
+    /**
+     * アセットに無いイメージデータを読み込み
+     * @returns {Promise<unknown>|Promise<void>}
+     * @private
+     */
     _checkImage() {
       const imageSource = [];
       const loadImage = [];
@@ -302,7 +339,12 @@ export class TiledMap extends XMLLoader{
       }
     }
 
-    //マップイメージ作成
+    /**
+     * マップイメージ作成
+     * @param layerName {String}
+     * @returns {Texture|null}
+     * @private
+     */
     _generateImage(layerName) {
       let numLayer = 0;
       for (let i = 0; i < this.layers.length; i++) {
@@ -362,7 +404,14 @@ export class TiledMap extends XMLLoader{
       return texture;
     }
 
-    //キャンバスの指定した座標にマップチップのイメージをコピーする
+    /**
+     * キャンバスの指定した座標にマップチップのイメージをコピーする
+     * @param canvas {HTMLCanvasElement}
+     * @param index {Number}
+     * @param x {Number}
+     * @param y {Number}
+     * @private
+     */
     _setMapChip(canvas, index, x, y) {
       //対象タイルセットの判別
       let tileset;
@@ -390,7 +439,12 @@ export class TiledMap extends XMLLoader{
     }
 }
 
-//ローダーに追加
+/**
+ * tmxファイル読み込み
+ * @param key {String}
+ * @param path {String}
+ * @returns {Flow}
+ */
 AssetLoader.assetLoadFunctions.tmx = (key, path) => {
     const tmx = new TiledMap();
     return tmx.load(path);

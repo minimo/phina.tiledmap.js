@@ -8,6 +8,11 @@ export class XMLLoader extends Asset{
 
     loadDummy() { }
 
+    /**
+     * XMLファイルのロード
+     * @param resolve {function}
+     * @protected
+     */
     _load(resolve) {
         //パス抜き出し
         this.path = "";
@@ -36,7 +41,12 @@ export class XMLLoader extends Asset{
         xml.send(null);
     }
 
-    //XMLプロパティをJSONに変換
+    /**
+     * XMLプロパティをJSONに変換
+     * @param elm {XMLDocument}
+     * @returns {{}}
+     * @protected
+     */
     _propertiesToJSON(elm) {
         const properties = elm.getElementsByTagName("properties")[0];
         const obj = {};
@@ -63,7 +73,12 @@ export class XMLLoader extends Asset{
         return obj;
     }
 
-    //XML属性をJSONに変換
+    /**
+     * XML属性をJSONに変換
+     * @param source
+     * @returns {{}}
+     * @protected
+     */
     _attrToJSON(source) {
         const obj = {};
         for (let i = 0; i < source.attributes.length; i++) {
@@ -74,7 +89,12 @@ export class XMLLoader extends Asset{
         return obj;
     }
 
-    //XML属性をJSONに変換（Stringで返す）
+    /**
+     * XML属性をJSONに変換（Stringで返す）
+     * @param source
+     * @returns {{}}
+     * @protected
+     */
     _attrToJSON_str(source) {
         const obj = {};
         for (let i = 0; i < source.attributes.length; i++) {
@@ -85,6 +105,8 @@ export class XMLLoader extends Asset{
 
     /**
      * CSVパース
+     * @param data {string}
+     * @returns {*[]}
      * @protected
      */
     _parseCSV(data) {
@@ -100,6 +122,8 @@ export class XMLLoader extends Asset{
     /**
      * BASE64パース
      * http://thekannon-server.appspot.com/herpity-derpity.appspot.com/pastebin.com/75Kks0WH
+     * @param data {string}
+     * @returns {*[]}
      * @protected
      */
     _parseBase64(data) {
