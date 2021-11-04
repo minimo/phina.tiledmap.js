@@ -1,5 +1,5 @@
 import {XMLLoader} from "./XMLLoader"
-import {AssetLoader, AssetManager, $extend, $safe} from "phina.js";
+import {AssetLoader, AssetManager} from "phina.js";
 
 export class TileSet extends XMLLoader{
     constructor(xml) {
@@ -18,7 +18,7 @@ export class TileSet extends XMLLoader{
     /**
      * XMLファイル読み込み
      * @param xml {XMLDocument}
-     * @returns {Promise<unknown>}
+     * @returns {Promise<void>}
      */
     loadFromXML(xml) {
       return this._parse(xml);

@@ -1,5 +1,5 @@
 import {XMLLoader} from "./XMLLoader"
-import {AssetLoader, AssetManager, Canvas, Texture, $safe, $extend} from "phina.js";
+import {AssetLoader, AssetManager, Canvas, Texture} from "phina.js";
 
 export class TiledMap extends XMLLoader{
     constructor() {
@@ -88,7 +88,7 @@ export class TiledMap extends XMLLoader{
     /**
      * データのパースを行う
      * @param data {XMLDocument}
-     * @returns {Promise<unknown>}
+     * @returns {Promise<void>}
      * @private
      */
     _parse(data) {
@@ -111,7 +111,7 @@ export class TiledMap extends XMLLoader{
           .then(() => {
             //マップイメージ生成
             this.image = this._generateImage();
-            resolve();
+            resolve(this.image);
           });
       })
     }
@@ -269,7 +269,7 @@ export class TiledMap extends XMLLoader{
 
     /**
      * アセットに無いイメージデータを読み込み
-     * @returns {Promise<unknown>|Promise<void>}
+     * @returns {Promise<void>}
      * @private
      */
     _checkImage() {
