@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "serve:dev": "webpack-cli serve --config webpack.dev.js",
-    "build:dev": "webpack --config webpack.dev.js",
-    "build:prd": "webpack --config webpack.prod.js",
+    "develop": "webpack --config webpack.dev.js",
+    "publish": "webpack --config webpack.prod.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

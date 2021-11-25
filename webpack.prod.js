@@ -5,6 +5,6 @@ module.exports = merge(common, {
   mode: 'production',
   output: {
     path: `${__dirname}/publish`,
-    filename: 'phina.tiledmap.esm.js',
+    filename: 'phina.tiledmap.js',
   },
 });

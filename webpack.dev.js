@@ -5,11 +5,11 @@ module.exports = merge(common, {
   mode: 'development',
   devtool: 'inline-source-map',
   output: {
-    path: `${__dirname}/publish`,
-    filename: 'phina.tiledmap.esm.js',
+    path: `${__dirname}/develop`,
+    filename: 'phina.tiledmap.js',
   },
   devServer: {
-    contentBase: "publish",
+    contentBase: "develop",
     open: true
   },
 });
